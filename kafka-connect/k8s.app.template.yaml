@@ -1,0 +1,95 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%-template'
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+      labels:
+        app: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+        owner: 'corsica'
+    spec:
+      replicas: 1
+      strategy:
+        type: Rolling
+      selector:
+        app: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+      template:
+        metadata:
+          name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+          labels:
+            app: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+            owner: 'corsica'
+        spec:
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+                    topologyKey: kubernetes.io/hostname
+          containers:
+            - name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+              # envFrom:
+              #   - configMapRef:
+              #       name: 'kafka-envs'
+              #       # unless we decide to still pass some options via envs (instead of .properties files)
+              #       # to be deprecated: after migration
+              #       # or if options in .properties will work out properly
+              image: %IMAGE%:%TAG%
+              imagePullPolicy: Always
+              livenessProbe:
+                exec:
+                  command:
+                    - /kafka/bin/healthcheck.sh
+                failureThreshold: 3
+                initialDelaySeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              resources:
+                limits:
+                  memory: 1350Mi
+                requests:
+                  cpu: 15m
+                  memory: 512Mi
+              volumeMounts:
+                - mountPath: /kafka/mounted
+                  name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+                  readOnly: true
+                - name: kafka-retail-trrrtstore-jks
+                  readOnly: true
+                  mountPath: /kafka/.ssl
+              importPolicy:
+                insecure: "true"
+          volumes:
+            - name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+              configMap:
+                name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+                defaultMode: 420
+            - name: kafka-retail-trrrtstore-jks
+              secret:
+                secretName: kafka-retail-trrrtstore-jks
+                defaultMode: 420
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+      labels:
+        app: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'
+    spec:
+      type: ClusterIP
+      ports:
+        - name: 8083-port
+          port: 8083
+          protocol: TCP
+          targetPort: 8083
+      selector:
+        app: '%CONNECTOR_TYPE%-%CONNECTOR_NAME%'

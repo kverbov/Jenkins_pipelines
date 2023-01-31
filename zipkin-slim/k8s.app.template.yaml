@@ -1,0 +1,84 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: '%SVC_NAME%-%STAND%-template'
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: '%SVC_NAME%-%STAND%'
+      labels:
+        app: '%SVC_NAME%-%STAND%'
+      namespace: '%NAMESPACE%'
+    spec:
+      replicas: 1
+      strategy:
+        type: Rolling
+      selector:
+        app: '%SVC_NAME%-%STAND%'
+      template:
+        metadata:
+          name: '%SVC_NAME%-%STAND%'
+          labels:
+            app: '%SVC_NAME%-%STAND%'
+        spec:
+          containers:
+            - env:
+                - name: JAVA_TOOL_OPTIONS
+                  value: '%JAVA_TOOL_OPTIONS%'
+                - name: JAVA_OPTS
+                  value: '%JAVA_OPTS%'
+                - name: MALLOC_ARENA_MAX
+                  value: '2'
+                - name: MALLOC_MMAP_THRESHOLD_
+                  value: '8192'
+                - name: MALLOC_TRIM_THRESHOLD_
+                  value: '8192'
+              image: '%IMAGE%:%TAG%'
+              imagePullPolicy: Always
+              readinessProbe:
+                httpGet:
+                  path: /health
+                  port: 9411
+                  scheme: HTTP
+                initialDelaySeconds: 60
+                timeoutSeconds: 5
+                periodSeconds: 10
+                failureThreshold: 6
+              livenessProbe:
+                httpGet:
+                  path: /health
+                  port: 9411
+                  scheme: HTTP
+                initialDelaySeconds: 60
+                timeoutSeconds: 5
+                periodSeconds: 10
+                failureThreshold: 6
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 500Mi
+                limits:
+                  memory: 2Gi
+              importPolicy:
+                insecure: "true"
+              name: '%SVC_NAME%-%STAND%'
+              envFrom:
+                - configMapRef:
+                    name: 'eszp-%STAND%'
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: '%SVC_NAME%-%STAND%'
+      labels:
+        app: '%SVC_NAME%-%STAND%'
+      namespace: '%NAMESPACE%'
+    spec:
+      type: ClusterIP
+      ports:
+        - name: 9411-port
+          port: 9411
+          protocol: TCP
+          targetPort: 9411
+      selector:
+        app: '%SVC_NAME%-%STAND%'

@@ -1,0 +1,51 @@
+-- from uprf.sessionevent (postgres) to session_event (oracle)
+CREATE TABLE dboevo.session_event (
+sessionid VARCHAR(36) NOT NULL,
+userid VARCHAR(36) NULL,
+customerid VARCHAR(15) NULL,
+clientid VARCHAR(4000) NULL,
+channel VARCHAR(10) NULL,
+deviceid VARCHAR(36) NULL,
+created TIMESTAMP NULL,
+expiry TIMESTAMP NULL,
+finished TIMESTAMP NULL,
+blockreason VARCHAR(255) NULL,
+blockdate TIMESTAMP NULL,
+appversion VARCHAR(32) NULL,
+appprotocol VARCHAR(18) NULL,
+payload VARCHAR(4000) NULL,
+id VARCHAR(36) NOT NULL PRIMARY KEY,
+--CONSTRAINT id_pk PRIMARY KEY(id),
+CONSTRAINT clientid_ensure_json CHECK (clientid IS JSON STRICT),
+CONSTRAINT payload_ensure_json CHECK (payload IS JSON STRICT)
+);
+
+
+
+-- from uprf.device (postgres) to device (oracle)
+CREATE TABLE dboevo.device (
+id VARCHAR(36) NOT NULL PRIMARY KEY,
+idempotencykey	VARCHAR(36)	NULL,
+manufacturer VARCHAR(60) NULL,
+model VARCHAR(60) NULL,
+platform VARCHAR(32) NULL,
+created	TIMESTAMP NULL,
+blockreason	VARCHAR(255) NULL,
+blockdate TIMESTAMP NULL
+--CONSTRAINT device_id_pk PRIMARY KEY(id)
+);
+
+
+
+-- from uprf.userrecord (postgres) to user_record (oracle)
+CREATE TABLE dboevo.user_record (
+userid VARCHAR(36) NOT NULL PRIMARY KEY,
+status NUMBER(5,0) NULL,
+sessionid VARCHAR(36) NULL,
+sessionexpiry TIMESTAMP NULL,
+sessionfinish TIMESTAMP NULL,
+properties NUMBER(5,0) NULL,
+created	TIMESTAMP NULL,
+updated	TIMESTAMP NULL
+--CONSTRAINT user_record_userid_pk PRIMARY KEY(userid)
+);

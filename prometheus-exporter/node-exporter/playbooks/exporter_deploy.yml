@@ -1,0 +1,48 @@
+---
+- hosts: all
+  tasks:
+    - name: Unpackage zip
+      unarchive:
+        src: "{{ nexus_url }}"
+        dest: /tmp
+        remote_src: yes
+        list_files: True
+      register: zipout
+
+    - name: Find exporter
+      find:
+        path: "/tmp/{{ zipout.files[0] }}"
+        recurse: yes
+        file_type: file
+        use_regex: no
+        patterns: "*_exporter"
+      register: exp_name
+
+    - name: Move exporter
+      copy:
+        src: exp_name.files[0].path
+        dest: "/usr/local/bin/"
+        owner: root
+        group: root
+        mode: "0555"
+        remote_src: yes
+
+    - name: Create service
+      copy:
+        src: "{{ pwd }}/{{ PATH_TO_HOME}}/node_exporter.service"
+        dest: "/etc/systemd/system"
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create user
+      user: 
+        name: node_exporter
+        shell: "/usr/bin/false"
+        create_home: no
+    
+    - name: Run exporter
+      service:
+        name: node_exporter
+        enabled: yes
+        state: started

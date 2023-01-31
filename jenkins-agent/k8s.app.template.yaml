@@ -1,0 +1,66 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: '%SVC_NAME%-template'
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: '%SVC_NAME%'
+      labels:
+        app: '%SVC_NAME%'
+      namespace: '%NAMESPACE%'
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
+      selector:
+        app: '%SVC_NAME%'
+      template:
+        metadata:
+          name: '%SVC_NAME%'
+          labels:
+            app: '%SVC_NAME%'
+        spec:
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - '%SVC_NAME%'
+                    topologyKey: kubernetes.io/hostname
+          containers:
+            - env:
+                - name: JAVA_TOOL_OPTIONS
+                  value: -XX:+UnlockExperimentalVMOptions -Dsun.zip.disableMemoryMapping=true -Dfile.encoding=utf-8
+              envFrom:
+                - configMapRef:
+                    name: '%SVC_NAME%'
+                - secretRef:
+                    name: '%SECRET_NAME%'
+              image: '%IMAGE%:%TAG%'
+              imagePullPolicy: Always
+              importPolicy:
+                insecure: "true"
+              name: '%SVC_NAME%'
+              resources:
+                limits:
+                  cpu: 1950m
+                  memory: 512Mi
+                requests:
+                  cpu: 501m
+                  memory: 256Mi
+              volumeMounts:
+                - mountPath: /home/jenkins/.docker
+                  name: nexus-quay-creds
+                  readOnly: true
+          volumes:
+            - name: nexus-quay-creds
+              secret:
+                defaultMode: 420
+                secretName: nexus-quay-creds

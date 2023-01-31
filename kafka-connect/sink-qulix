@@ -1,0 +1,118 @@
+-- from dbo.digital_card_to_bin_rank (qulix) to card.digital_card_to_bin_rank && dgcr.digital_card_to_bin_rank (postgres)
+CREATE TABLE card.digital_card_to_bin_rank (
+	id varchar(36) NOT NULL,
+	bin_rank varchar(255) NOT NULL,
+	type varchar(255) NOT NULL,
+	use_max_count_restriction boolean NOT NULL,
+	create_date timestamp NOT NULL,
+	CONSTRAINT PK_digital_card_to_bin_rank PRIMARY KEY (id),
+	CONSTRAINT UK_digital_card_to_bin_rank_bin_rank UNIQUE (bin_rank)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE card.digital_card_to_bin_rank TO rdbo_card_ms;
+
+CREATE TABLE dgcr.digital_card_to_bin_rank (
+	id varchar(36) NOT NULL,
+	bin_rank varchar(255) NOT NULL,
+	type varchar(255) NOT NULL,
+	use_max_count_restriction boolean NOT NULL,
+	create_date timestamp NOT NULL,
+	CONSTRAINT PK_digital_card_to_bin_rank PRIMARY KEY (id),
+	CONSTRAINT UK_digital_card_to_bin_rank_bin_rank UNIQUE (bin_rank)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE dgcr.digital_card_to_bin_rank TO rdbo_dgcr_ms;
+
+
+
+-- from dbo.user_record (qulix) to uprf.qulixuserrecord (postgres)
+CREATE TABLE uprf.qulixuserrecord (
+	id varchar(36) NOT NULL,
+	username varchar(255) NOT NULL,
+	secret varchar(255) NULL,
+	must_change_password boolean NOT NULL,
+	status varchar(255) NOT NULL,
+	phone varchar(255) NULL,
+	email varchar(255) NULL,
+	email_mode varchar(255) NOT NULL,
+	hard_token_serial_number varchar(255) NULL,
+	temporary_blocked boolean NOT NULL,
+	wrong_password_attempts_remaining smallint NOT NULL,
+	registration_channel varchar(255) NULL,
+	registration_date timestamp NULL,
+	blocking_date timestamp NULL,
+	blocking_reason varchar(255) NULL,
+	last_login_date timestamp NULL,
+	last_login_channel varchar(255) NULL,
+	id_card_number varchar(16) NOT NULL,
+	bank_identities_last_update_date timestamp NOT NULL,
+	last_send_statement_email varchar(255) NULL,
+	soft_token_mode varchar(255) NOT NULL,
+	region varchar(17) NULL,
+	id_rrrfinance_bank varchar(36) NULL,
+	temporary_blocked_by_password_restore boolean NOT null,
+	CONSTRAINT PK_user_record PRIMARY KEY (id),
+	CONSTRAINT UK_user_record_id_card_number UNIQUE (id_card_number),
+	CONSTRAINT UK_user_record_username UNIQUE (username)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE uprf.qulixuserrecord TO rdbo_uprf_ms;
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE uprf.qulixuserrecord TO rdbo_schema_reader;
+
+
+
+-- from dbo.user_record_flag (qulix) to uprf.qulixuserrecordflag (postgres)
+CREATE TABLE uprf.qulixuserrecordflag (
+	user_record_id varchar(36) NOT NULL,
+	flag varchar(255) NOT NULL,
+	CONSTRAINT PK_user_record_flag PRIMARY KEY (user_record_id,flag)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE uprf.qulixuserrecordflag TO rdbo_uprf_ms;
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE uprf.qulixuserrecordflag TO rdbo_schema_reader;
+
+
+
+-- from dbo.operation_history (qulix) to lmts.qulix_operation_history (postgres)
+CREATE TABLE lmts.qulix_operation_history (
+id varchar(36) PRIMARY KEY,
+currency varchar(3) NOT NULL,
+amount numeric(11,2) NOT NULL,
+operation_date timestamp NOT NULL,
+user_id	varchar(36) NOT NULL,
+card_id	varchar(16)	NULL,
+account_id varchar(13)	NULL,
+operation_type varchar(40) NOT NULL,
+status varchar(11) NULL,
+channel	varchar(6) NULL
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE lmts.qulix_operation_history TO rdbo_lmts_ms;
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE lmts.qulix_operation_history TO rdbo_schema_reader;
+
+
+
+-- from dbo.user_bank_identity (qulix) to lmts.qulix_user_bank_identity (postgres)
+CREATE TABLE lmts.qulix_user_bank_identity (
+id varchar(36) PRIMARY KEY,
+user_record_id varchar(36) NOT NULL,
+branch varchar(3),
+customer_id	varchar(255),
+actual bool	NOT NULL,
+update_date	timestamp NOT NULL,
+order_number integer NOT NULL,
+UNIQUE (branch, customer_id)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE lmts.qulix_user_bank_identity TO rdbo_lmts_ms;
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE lmts.qulix_user_bank_identity TO rdbo_schema_reader;
+
+
+
+-- from dbo.user_data (qulix) to lmts.qulix_user_data (postgres)
+CREATE TABLE lmts.qulix_user_data (
+id varchar(36) PRIMARY KEY,
+card_number	varchar(16)	UNIQUE,
+deposit_agreement bool NOT NULL,
+last_payment_order_number smallint NOT NULL,
+last_payment_order_number_date timestamp NOT NULL,
+savings_account_agreement bool NOT NULL,
+last_send_statement_email varchar(255) NULL,
+user_bank_identity_id varchar(36) NULL
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE lmts.qulix_user_data TO rdbo_lmts_ms;
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE lmts.qulix_user_data TO rdbo_schema_reader;

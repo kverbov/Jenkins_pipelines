@@ -1,0 +1,65 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: "%SVC_NAME%-%STAND%-template"
+objects:
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: '%SVC_NAME%'
+      labels:
+        app: '%SVC_NAME%'
+      namespace: '%NAMESPACE%'
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
+      selector:
+        app: '%SVC_NAME%'
+      template:
+        metadata:
+          name: '%SVC_NAME%'
+          labels:
+            app: '%SVC_NAME%'
+        spec:
+          nodeName: ''
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - '%SVC_NAME%'
+                    topologyKey: kubernetes.io/hostname
+          containers:
+          - image: '%IMAGE%:%TAG%'
+            imagePullPolicy: Always
+            importPolicy:
+              insecure: "true"
+            name: '%SVC_NAME%'
+            resources:
+              limits:
+                cpu: 100m
+                memory: 512Mi
+              requests:
+                cpu: 10m
+                memory: 256Mi
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: '%SVC_NAME%'
+      labels:
+        app: '%SVC_NAME%'
+    spec:
+      type: ClusterIP
+      ports:
+        - name: 8080-port
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        app: '%SVC_NAME%'

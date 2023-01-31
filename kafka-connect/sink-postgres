@@ -1,0 +1,52 @@
+#Note: this file should be replaced by flyway schema migration in the particular services
+
+-- from uprf.sessionevent (postgres) to ophb.uprf_sessionevent (postgres)
+CREATE TABLE ophb.uprf_sessionevent (
+	sessionid uuid NULL,
+	userid uuid NULL,
+	customerid varchar(15) NULL,
+	clientid jsonb NULL,
+	channel varchar(10) NULL,
+	deviceid uuid NULL,
+	created timestamp NULL,
+	expiry timestamp NULL,
+	finished timestamp NULL,
+	blockreason varchar(255) NULL,
+	blockdate timestamp NULL,
+	appversion varchar(18) NULL,
+	appprotocol varchar(18) NULL,
+	payload jsonb NULL,
+	id uuid NOT NULL PRIMARY KEY
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE ophb.uprf_sessionevent TO rdbo_ophb_ms;
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE ophb.uprf_sessionevent TO rdbo_schema_reader;
+
+-- optimize ophb.uprf_sessionevent table
+create index ophb_idx_sessionevent_sessionid on ophb.uprf_sessionevent (sessionid);
+
+-- from clnt.crossreference (postgres) to ophb.clnt_crossreference (postgres)
+CREATE TABLE ophb.clnt_crossreference (
+	dboid varchar NOT NULL,
+	firstname varchar NULL,
+	middlename varchar NULL,
+	lastname varchar NULL,
+	siebelid varchar NULL,
+	ibsoid varchar NULL,
+	rfbid varchar NULL,
+	phone varchar NULL,
+	email varchar NULL,
+	absids jsonb NULL,
+	consentlist jsonb NULL,
+	createdat timestamp NOT NULL,
+	updatedat timestamp NOT NULL,
+    actual bool NOT NULL DEFAULT true,
+	CONSTRAINT cross_ref_user_id_dbo_id_key PRIMARY KEY (dboid)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE ophb.clnt_crossreference TO rdbo_ophb_ms;
+GRANT SELECT, INSERT, UPDATE, DELETE on TABLE ophb.clnt_crossreference TO rdbo_schema_reader;
+
+-- optimize ophb.clnt_crossreference
+CREATE INDEX crossreference_phone_idx ON ophb.clnt_crossreference USING btree (phone);
+CREATE INDEX crossreference_siebel_id_idx ON ophb.clnt_crossreference USING btree (siebelid);
+CREATE INDEX dbo_absids_gin_idx ON ophb.clnt_crossreference USING gin (absids jsonb_path_ops);
+

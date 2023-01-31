@@ -1,0 +1,58 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: '%SVC_NAME%-template'
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: '%SVC_NAME%'
+      labels:
+        app: '%SVC_NAME%'
+      namespace: '%NAMESPACE%'
+    spec:
+      replicas: 1
+      strategy:
+        type: Rolling
+      selector:
+        app: '%SVC_NAME%'
+      template:
+        metadata:
+          name: '%SVC_NAME%'
+          labels:
+            app: '%SVC_NAME%'
+        spec:
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - '%SVC_NAME%'
+                    topologyKey: kubernetes.io/hostname
+          containers:
+            - image: '%IMAGE%:%TAG%'
+              imagePullPolicy: Always
+              importPolicy:
+                insecure: "true"
+              name: '%SVC_NAME%'
+              resources:
+                limits:
+                  cpu: 200m
+                  memory: 1024Mi
+                requests:
+                  cpu: 5m
+                  memory: 32Mi
+              volumeMounts:
+                - name: alpine-ssl-kafka-client
+                  readOnly: true
+                  mountPath: /kafka/.ssl/
+          volumes:
+            - name: alpine-ssl-kafka-client
+              secret:
+                secretName: alpine-ssl-kafka-client
+                defaultMode: 420

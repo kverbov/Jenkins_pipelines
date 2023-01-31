@@ -1,0 +1,116 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: "%KAFKA_CLUSTER%-%STAND%-template"
+objects:
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: '%KAFKA_CLUSTER%'
+      labels:
+        app: '%KAFKA_CLUSTER%'
+      namespace: '%NAMESPACE%'
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
+      selector:
+        app: '%KAFKA_CLUSTER%'
+      template:
+        metadata:
+          name: '%KAFKA_CLUSTER%'
+          labels:
+            app: '%KAFKA_CLUSTER%'
+        spec:
+          nodeName: ''
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - '%KAFKA_CLUSTER%'
+                    topologyKey: kubernetes.io/hostname
+          containers:
+          - env:
+            - name: JAVA_OPTS
+              value: >-
+                -Djava.security.krb5.conf=/keytab/krb5.conf
+                -Djava.security.krb5.realm=Tbank.Trrr.Tdepartment
+                -Djava.security.krb5.kdc=RSBT-DC192.168.1.2.Tbank.Trrr.Tdepartment
+                -Djavax.security.auth.useSubjectCredsOnly=false
+            - name: AKHQ_CONFIGURATION
+              value: |
+                akhq:
+                  server:
+                    access-log:
+                      enabled: true
+                      name: org.akhq.log.access # Logger name
+                      format: "[Date: {}] [Duration: {} ms] [Url: {} {} {}] [Status: {}] [Ip: {}] [Length: {}] [Port: {}]" # Logger format
+                  clients-defaults:
+                    consumer:
+                      properties:
+                        isolation.level: read_committed
+                  connections:
+                    docker-kafka-server:
+                      properties:
+                        bootstrap.servers: "RBQATAS00049.test.rrr.department:9092,RBQATAS00050.test.rrr.department:9092,RBQATAS00051.test.rrr.department:9092"
+                        sasl.jaas.config: com.sun.security.auth.module.Krb5LoginModule required serviceName="kafka" useKeyTab=true keyTab="/keytab/trrr_evo_kafka.keytab" principal="trrr_evo_kafka@Tbank.Trrr.Tdepartment";
+                        security.protocol: SASL_SSL
+                        ssl.trrrtstore.location: "/keytab/client.trrrtstore.jks"
+                        ssl.trrrtstore.password: "T1ran1um"
+                        sasl.mechanism: GSSAPI
+            image: '%IMAGE%:%TAG%'
+            imagePullPolicy: Always
+            importPolicy:
+              insecure: "true"
+            name: '%KAFKA_CLUSTER%'
+            resources:
+              limits:
+                cpu: 200m
+                memory: 512Mi
+              requests:
+                cpu: 100m
+                memory: 256Mi
+            volumeMounts:
+              - name: client-trrrtstore-test
+                mountPath: /keytab/client.trrrtstore.jks
+                subPath: client.trrrtstore.jks
+              - name: krb5-file
+                mountPath: /keytab/krb5.conf
+                subPath: krb5.conf
+              - name: ktab-file
+                mountPath: /keytab/trrr_evo_kafka.keytab
+                subPath: trrr_evo_kafka.keytab
+          volumes:
+            - name: client-trrrtstore-test
+              configMap:
+                name: client-trrrtstore-test
+                defaultMode: 420
+            - name: krb5-file
+              configMap:
+                name: krb5-conf
+                defaultMode: 420
+            - name: ktab-file
+              secret:
+                secretName: trrr-evo-kafka-keytab
+                defaultMode: 420
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: '%KAFKA_CLUSTER%'
+      labels:
+        app: '%KAFKA_CLUSTER%'
+    spec:
+      type: ClusterIP
+      ports:
+        - name: 8080-port
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        app: '%KAFKA_CLUSTER%'

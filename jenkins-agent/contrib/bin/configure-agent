@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# This script is a place-holder for agent images to override 
+#
+# Add bank keys to default keystore
+export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which java)))))

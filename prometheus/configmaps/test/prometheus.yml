@@ -1,0 +1,155 @@
+global:
+  scrape_interval: 15s # default: 1m
+  evaluation_interval: 15s # default: 1m
+  scrape_timeout: 15s # default: 10s
+
+scrape_configs:
+  - job_name: pods
+    tls_config:
+      insecure_skip_verify: true
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - admc-test
+            - audt-test
+            - cash-test
+            - crls-test
+            - dbzm-test
+            - drrr-common
+            - drrr-test
+            - drfs-test
+            - evau-test
+            - evo-test
+            - ips-test
+            - lpet-test
+            - nsdp-test
+            - oapi-gord-test
+            - online-web-test
+            - orid-test
+            - pnb-test
+            - rbcn-test
+            - rrrp-atm-test
+            - rrrp-chat-test
+            - rrrp-cm-test
+            - rrrp-corp-test
+            - rrrp-fils-test
+            - rrrp-nfo-test
+            - rrrp-payr-test
+            - rrrp-ppro-test
+            - rrrp-react-test
+            - rrrp-rmb-test
+            - rrrp-sggo-test
+            - savings-bonus-test
+            - scrb-test
+            - sgia-apis-test
+            - sgia-core-app-test
+            - sgia-middle-test
+            - sgia-utility-app-test
+            - svng-test
+            - tcom-test
+    relabel_configs:
+      - action: keep
+        source_labels: [__meta_kubernetes_pod_annotationpresent_prometheus_io_scrape]
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_metrics_path]
+        target_label: __metrics_path__
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape_scheme]
+        regex: (https?)
+        target_label: __scheme__
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_metrics_port]
+        regex: ^$
+        replacement: 8080
+        target_label: __meta_kubernetes_pod_annotation_prometheus_io_metrics_port
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_metrics_port]
+        regex: (.+):(?:\d+);(\d+)
+        replacement: ${1}:${2}
+        target_label: __address__
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_annotation_openshift_io_deployment_config_name]
+        target_label: dc
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: instance
+      - source_labels: [__meta_kubernetes_pod_label_git_version]
+        target_label: imgtag
+      - source_labels: [__meta_kubernetes_pod_labelpresent_owner, __meta_kubernetes_pod_label_owner]
+        regex: true;(.*)
+        target_label: owner
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: "^ZUUL::EXCEPTION:(Connect_to_.+|.+_failed_to_respond.+)$"
+        action: drop
+  - job_name: pods-extra
+    tls_config:
+      insecure_skip_verify: true
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - admc-test
+            - audt-test
+            - cash-test
+            - crls-test
+            - dbzm-test
+            - drrr-common
+            - drrr-test
+            - drfs-test
+            - evau-test
+            - evo-test
+            - ips-test
+            - lpet-test
+            - nsdp-test
+            - oapi-gord-test
+            - online-web-test
+            - orid-test
+            - pnb-test
+            - rbcn-test
+            - rrrp-atm-test
+            - rrrp-chat-test
+            - rrrp-cm-test
+            - rrrp-corp-test
+            - rrrp-fils-test
+            - rrrp-nfo-test
+            - rrrp-payr-test
+            - rrrp-ppro-test
+            - rrrp-react-test
+            - rrrp-rmb-test
+            - rrrp-sggo-test
+            - savings-bonus-test
+            - scrb-test
+            - sgia-apis-test
+            - sgia-core-app-test
+            - sgia-middle-test
+            - sgia-utility-app-test
+            - svng-test
+            - tcom-test
+    relabel_configs:
+      - action: keep
+        source_labels: [__meta_kubernetes_pod_annotationpresent_prometheus_io_extra_metrics_path]
+        #source_labels: [__meta_kubernetes_pod_annotationpresent_prometheus_io_scrape]
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_extra_metrics_path]
+        target_label: __metrics_path__
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape_scheme]
+        regex: (https?)
+        target_label: __scheme__
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_metrics_port]
+        regex: ^$
+        replacement: 8080
+        target_label: __meta_kubernetes_pod_annotation_prometheus_io_metrics_port
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_metrics_port]
+        regex: (.+):(?:\d+);(\d+)
+        replacement: ${1}:${2}
+        target_label: __address__
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_annotation_openshift_io_deployment_config_name]
+        target_label: dc
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: instance
+      - source_labels: [__meta_kubernetes_pod_label_git_version]
+        target_label: imgtag
+      - source_labels: [__meta_kubernetes_pod_labelpresent_owner, __meta_kubernetes_pod_label_owner]
+        regex: true;(.*)
+        target_label: owner

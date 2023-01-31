@@ -1,0 +1,94 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: "%SVC_NAME%-%STAND%-template"
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "%SVC_NAME%-%STAND%"
+      labels:
+        app: "%SVC_NAME%-%STAND%"
+      namespace: "%NAMESPACE%"
+    spec:
+      replicas: 1
+      strategy:
+        type: Rolling
+      selector:
+        app: "%SVC_NAME%-%STAND%"
+      template:
+        metadata:
+          name: "%SVC_NAME%-%STAND%"
+          labels:
+            app: "%SVC_NAME%-%STAND%"
+        spec:
+          containers:
+            - image: "%IMAGE%:%TAG%"
+              imagePullPolicy: Always
+              importPolicy:
+                insecure: "true"
+              name: "%SVC_NAME%-%STAND%"
+              annotations:
+                prometheus.io/scrape: 'true'
+                prometheus.io/metrics_path: /metrics
+                prometheus.io/scrape_scheme: http
+              volumeMounts:
+                - name: "%SVC_NAME%-%STAND%-vol"
+                  mountPath: /opt/prometheus/prometheus.yml
+                  subPath: prometheus.yml
+              ports:
+                - containerPort: 9090
+              readinessProbe:
+                httpGet:
+                  path: /-/ready
+                  port: 9090
+                  scheme: HTTP
+                initialDelaySeconds: 10
+                timeoutSeconds: 5
+                periodSeconds: 5
+                failureThreshold: 6
+              livenessProbe:
+                httpGet:
+                  path: /-/healthy
+                  port: 9090
+                  scheme: HTTP
+                initialDelaySeconds: 10
+                timeoutSeconds: 5
+                periodSeconds: 5
+                failureThreshold: 6
+              resources:
+                limits:
+                  memory: 2Gi
+                requests:
+                  cpu: 100m
+                  memory: 512Mi
+          #serviceAccountName: "%SVC_NAME%-rdbo"
+          volumes:
+            - name: "%SVC_NAME%-%STAND%-vol"
+              configMap:
+                name: "%SVC_NAME%-%STAND%"
+                items:
+                  - key: prometheus.yml
+                    path: prometheus.yml
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "%SVC_NAME%-%STAND%"
+      labels:
+        app: "%SVC_NAME%-%STAND%"
+    spec:
+      type: ClusterIP
+      ports:
+        - name: 9090-port
+          port: 9090
+          protocol: TCP
+          targetPort: 9090
+      selector:
+        app: "%SVC_NAME%-%STAND%"
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: "%SVC_NAME%-%STAND%"
+      labels:
+        app: "%SVC_NAME%-%STAND%"
+    data:

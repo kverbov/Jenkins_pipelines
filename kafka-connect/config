@@ -1,0 +1,82 @@
+//check connector's status via http link
+http://dbzm.dev.apps.openshift.paas.tbank.trrr.tdepartment/connectors/dev/status
+http://dbzm.test.apps.openshift.paas.tbank.trrr.tdepartment/connectors/test/status
+||
+http://dbzm.cert.apps.openshift.paas.bank.rrr.department/connectors/cert/status
+http://dbzm.prod.apps.openshift.paas.bank.rrr.department/connectors/prod/status
+
+//show all available connections
+curl "$(hostname -i)":8083/connectors/
+
+//show connection status
+curl "$(hostname -i)":8083/connectors/dev/status
+curl "$(hostname -i)":8083/connectors/test/status
+curl "$(hostname -i)":8083/connectors/cert/status
+curl "$(hostname -i)":8083/connectors/prod/status
+
+// do it properly
+listener="$(hostname -i):8083"
+for config in /home/*.yaml; do
+	[ -e "${config}" ] || continue
+	connector="$(jq -r '.name' "${config}")"
+	curl -sX PUT -H 'Accept: application/json' -H 'Content-Type: application/json' "${listener}/connectors/${connector}/config" -d "$(jq -r '.config' "${config}")"
+done
+
+//remove connection
+curl -X DELETE "$(hostname -i)":8083/connectors/dev
+curl -X DELETE "$(hostname -i)":8083/connectors/test
+
+//export connection for dev/test/cert/prod stand by configmap.
+curl -s -X POST -H "Content-Type:application/json" "$(hostname -i)":8083/connectors/ --data-binary @/home/configmap.debezium
+
+// update connectors configs
+# Pitfall: using PUT to update existing connectors using configs from files, yet there are no guarantees that these lists match.
+listener="$(hostname -i):8083"
+for config in /home/*.json; do
+	[ -e "${config}" ] || continue
+	connector="$(jq -r '.name' "${config}")"
+	curl -sX PUT -H 'Accept: application/json' -H 'Content-Type: application/json' "${listener}/connectors/${connector}/config" -d "$(jq -r '.config' "${config}")"
+done
+
+//old style:
+curl -X POST -H "Content-Type:application/json" "$(hostname -i)":8083/connectors/ -d '
+{
+	%json%
+}
+'
+
+//drop publication and slot:
+DROP PUBLICATION dbzm_schema;
+SELECT pg_drop_replication_slot('dbzm_schema');
+
+//debug
+SELECT * FROM pg_publication;
+SELECT * FROM pg_publication_tables;
+SELECT * FROM pg_replication_slots;
+SELECT * FROM pg_stat_replication;
+SELECT pg_current_wal_insert_lsn();
+
+//show publications without table
+select pg_catalog.pg_publication.pubname, 0 as count from pg_catalog.pg_publication
+full outer join pg_catalog.pg_publication_tables on pg_catalog.pg_publication.pubname = pg_catalog.pg_publication_tables.pubname
+where pg_catalog.pg_publication_tables.pubname is null
+
+
+//create heartbeat table, if doesn't exist
+CREATE TABLE public.debezium_heartbeat (heartbeat bool);
+ALTER TABLE public.debezium_heartbeat REPLICA IDENTITY FULL;
+INSERT INTO public.debezium_heartbeat (heartbeat) VALUES ('1');
+SELECT * from public.debezium_heartbeat;
+UPDATE public.debezium_heartbeat SET heartbeat = '1'; --use this DML command for heartbeat 
+
+//dbzm_%SCHEMA_NAME% sample
+CREATE PUBLICATION dbzm_%SCHEMA_NAME% FOR TABLE %SCHEMA_NAME%.%TABLE_NAME% WITH (publish = 'insert, update');
+CREATE ROLE dbzm_replicator_%DB_CLUSTER_NAME%_%SCHEMA_NAME% WITH REPLICATION PASSWORD 'qwe1234rty' LOGIN;
+GRANT USAGE ON SCHEMA %SCHEMA_NAME% TO dbzm_replicator_%DB_CLUSTER_NAME%_%SCHEMA_NAME%;
+GRANT SELECT ON %SCHEMA_NAME%.%TABLE_NAME% TO dbzm_replicator_%DB_CLUSTER_NAME%_%SCHEMA_NAME%;
+GRANT USAGE ON SCHEMA public TO dbzm_replicator_%DB_CLUSTER_NAME%_%SCHEMA_NAME%;
+GRANT UPDATE ON public.debezium_heartbeat TO dbzm_replicator_%DB_CLUSTER_NAME%_%SCHEMA_NAME%;
+
+//alter publication if needed:
+ALTER PUBLICATION dbzm_%SCHEMA_NAME% SET ( publish = 'insert, update' );
+ALTER PUBLICATION dbzm_%SCHEMA_NAME% add table %SCHEMA_NAME%.%TABLE_NAME%
