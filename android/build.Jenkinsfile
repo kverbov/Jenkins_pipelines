@@ -34,8 +34,8 @@ pipeline {
 	environment {
 		PROJ = 'rboa'
 		NAME = 'android-client'
-		GTS_DOMAIN = 'domain.department'
-		GIT_URL = "https://bitbucket.${env.GTS_DOMAIN}/scm/${env.PROJ}/${env.NAME}.git"
+		g_DOMAIN = 'domain.department'
+		GIT_URL = "https://bitbucket.${env.g_DOMAIN}/scm/${env.PROJ}/${env.NAME}.git"
 		GIT_CREDS = 'trrr-rdbo-jenkins'
 		CI_REGISTRY_CREDS_ID = "trbx-facade-docker"
 	}
@@ -104,7 +104,7 @@ pipeline {
 							-w /tmp/build \
 							-v /jenkins/android-cache:/root/.gradle \
 							-v \${PWD}/${NAME}:/tmp/build \
-							docker-registry.${GTS_DOMAIN}/rdbo/tools/android_sdkmanager:${TAG} \
+							docker-registry.${g_DOMAIN}/rdbo/tools/android_sdkmanager:${TAG} \
 							sh -c "sh ${BUILD_SCRIPT}"
 						"""
 					}

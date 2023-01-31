@@ -23,11 +23,11 @@ pipeline {
 		SVC_NAME = 'zipkin-dependencies'
 		PROJ = 'jenkins-pipelines'
 		TEST_DOMAIN = 'tbank.trrr.tdepartment'
-		GTS_DOMAIN = 'domain.department'
+		g_DOMAIN = 'domain.department'
 		PROD_DOMAIN = 'bank.rrr.department'
-		GIT_URL = "https://bitbucket.${env.GTS_DOMAIN}/scm/RDBO_DOPS/${env.PROJ}.git"
+		GIT_URL = "https://bitbucket.${env.g_DOMAIN}/scm/RDBO_DOPS/${env.PROJ}.git"
 		GIT_CREDS = 'trrr-rdbo-jenkins'
-		IMAGE_IN_NEXUS = "docker-registry.${env.GTS_DOMAIN}/rdbo/common/${env.SVC_NAME}"
+		IMAGE_IN_NEXUS = "docker-registry.${env.g_DOMAIN}/rdbo/common/${env.SVC_NAME}"
 		IMAGE_IN_QUAY = "quay.paas.${env.PROD_DOMAIN}:5000/rdbo/tools_${env.SVC_NAME}"
 		OCP4_DEVTEST = "https://api.tpaas.${env.TEST_DOMAIN}:6443"
 		OCP4_DEVTEST_CREDS = 'trrr-rdbo-openshift'

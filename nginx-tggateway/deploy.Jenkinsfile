@@ -30,11 +30,11 @@ pipeline {
 	environment {
 		SVC_NAME = 'nginx-tggateway'
 		DOMAIN_DEVTEST = 'tbank.trrr.tdepartment'
-		DOMAIN_GTS = 'domain.department'
+		DOMAIN_g = 'domain.department'
 		DOMAIN_CERTPROD = 'bank.rrr.department'
-		GIT_URL = "https://bitbucket.${env.DOMAIN_GTS}/scm/rdbo_dops/jenkins-pipelines.git"
+		GIT_URL = "https://bitbucket.${env.DOMAIN_g}/scm/rdbo_dops/jenkins-pipelines.git"
 		GIT_CREDS = 'trrr-rdbo-jenkins'
-		IMAGE_IN_NEXUS = "docker-registry.${env.DOMAIN_GTS}/rdbo/common/${env.SVC_NAME}"
+		IMAGE_IN_NEXUS = "docker-registry.${env.DOMAIN_g}/rdbo/common/${env.SVC_NAME}"
 		IMAGE_IN_QUAY = "quay.paas.${env.DOMAIN_CERTPROD}:5000/rdbo/tools_${env.SVC_NAME}"
 		OPENSHIFT_API_URL_DEVTEST = "https://api.tpaas.${env.DOMAIN_DEVTEST}:6443"
 		OPENSHIFT_API_USER_DEVTEST = 'trrr-rdbo-openshift'

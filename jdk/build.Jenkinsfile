@@ -29,11 +29,11 @@ pipeline {
 
 	environment {
 		SVC_NAME = 'jdk'
-		GTS_DOMAIN = 'domain.department'
-		CI_REGISTRY = "docker-registry.${env.GTS_DOMAIN}/rdbo/common"
+		g_DOMAIN = 'domain.department'
+		CI_REGISTRY = "docker-registry.${env.g_DOMAIN}/rdbo/common"
 		CI_REGISTRY_IMAGE = "${CI_REGISTRY}/${SVC_NAME}"
 		BRANCH = 'master'
-		GIT_URL = "https://bitbucket.${env.GTS_DOMAIN}/scm/rdbo_dops/jenkins-pipelines.git"
+		GIT_URL = "https://bitbucket.${env.g_DOMAIN}/scm/rdbo_dops/jenkins-pipelines.git"
 	}
 
 	stages {

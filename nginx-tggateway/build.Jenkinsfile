@@ -26,13 +26,13 @@ pipeline {
 
 	environment {
 		SVC_NAME = 'nginx-tggateway'
-		GTS_DOMAIN = 'domain.department'
+		g_DOMAIN = 'domain.department'
 		TEST_DOMAIN = 'tbank.trrr.tdepartment'
 		PROD_DOMAIN = 'bank.rrr.department'
-		NEXUS = "docker-registry.${GTS_DOMAIN}"
+		NEXUS = "docker-registry.${g_DOMAIN}"
 		IMAGE_IN_NEXUS = "${NEXUS}/rdbo/common/${SVC_NAME}:${TAG}"
 		NEXUS_CREDS_RDBO_RW = 'trbx-facade-docker'
-		GIT_URL = "https://bitbucket.${GTS_DOMAIN}/scm/rdbo_dops/jenkins-pipelines.git"
+		GIT_URL = "https://bitbucket.${g_DOMAIN}/scm/rdbo_dops/jenkins-pipelines.git"
 		GIT_CREDS = 'trrr-rdbo-jenkins'
 	}
 

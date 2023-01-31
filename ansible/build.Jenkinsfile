@@ -22,10 +22,10 @@ pipeline {
 	environment {
 		SVC_NAME = 'ansible'
 		TAG = 'latest'
-		GTS_DOMAIN = 'domain.department'
+		g_DOMAIN = 'domain.department'
 		TEST_DOMAIN = 'tbank.trrr.tdepartment'
 		PROD_DOMAIN = 'bank.rrr.department'
-		NEXUS = "docker-registry.${GTS_DOMAIN}"
+		NEXUS = "docker-registry.${g_DOMAIN}"
 		IMAGE_IN_NEXUS = "${NEXUS}/rdbo/tools/${SVC_NAME}:${TAG}"
 		NEXUS_CREDS_RDBO_RW = 'trbx-facade-docker'
 		QUAY = "quay.paas.${PROD_DOMAIN}:5000"
@@ -33,7 +33,7 @@ pipeline {
 		OPENSHIFT_API_URL_DEVTEST = "https://openshift.paas.${TEST_DOMAIN}:8443"
 		OPENSHIFT_API_URL_CERTPROD = "https://openshift.paas.${PROD_DOMAIN}:8443"
 		BRANCH = 'master'
-		GIT_URL = "https://bitbucket.${GTS_DOMAIN}/scm/rdbo_dops/jenkins-pipelines.git"
+		GIT_URL = "https://bitbucket.${g_DOMAIN}/scm/rdbo_dops/jenkins-pipelines.git"
 		GIT_CREDS = 'trrr-rdbo-jenkins'
 	}
 
