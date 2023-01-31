@@ -48,7 +48,7 @@ pipeline {
 			steps {
 				withCredentials([
 					usernamePassword(
-						credentialsId: 'trbx-facade-docker',
+						credentialsId: 'trrx-facade-docker',
 						passwordVariable: 'CI_REGISTRY_PASS',
 						usernameVariable: 'CI_REGISTRY_USER')
 				]) {

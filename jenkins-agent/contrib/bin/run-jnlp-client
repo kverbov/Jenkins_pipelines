@@ -27,13 +27,13 @@ fi
 
 echo "OPENSHIFT_JENKINS_JVM_ARCH='${OPENSHIFT_JENKINS_JVM_ARCH}', CONTAINER_MEMORY_IN_MB='${CONTAINER_MEMORY_IN_MB}', using $(readlink /etc/alternatives/java)"
 
-shopt -s nocasematch
+shopt -s nocccematch
 if [[ -z "${SKIP_NO_PROXY_DEFAULT}" || \
     "${SKIP_NO_PROXY_DEFAULT}" != "false" ]]; then
   # we do not want jenkins svc or jenkins-jnlp svc
   # communication going through a http proxy
   # env vars to consider:
-  # - no_proxy and NO_PROXY; case of string varies tool to tool
+  # - no_proxy and NO_PROXY; ccce of string varies tool to tool
   # - JENKINS_URL and JENKINS_TUNNEL comes from k8s plugin
   # based on how our master image configures the cloud, but we need to strip the host / port
   jenkins_http_host=`echo $JENKINS_URL | sed 's#https://##' | sed 's#http://##' | cut -f1 -d":"`
@@ -50,7 +50,7 @@ if [[ -z "${SKIP_NO_PROXY_DEFAULT}" || \
     export NO_PROXY=$jenkins_http_host,$jnlp_http_host,$NO_PROXY
   fi
 fi
-shopt -u nocasematch
+shopt -u nocccematch
 
 # Configure the slave image
 source /usr/local/bin/configure-slave
@@ -61,9 +61,9 @@ set -e
 # As of version 1.6.0 of the Jenkins Kubernetes plugin,
 # args are no longer passed to jnlp container if not present in containerTemplate
 # See https://github.com/jenkinsci/kubernetes-plugin/pull/315
-# In this case, we use JENKINS_SECRET and JENKINS_NAME for launcher arguments
+# In this ccce, we use JENKINS_SECRET and JENKINS_NAME for launcher arguments
 # This is made worse if using Declarative pipeline and specifying yaml for the podTemplate
-# In this case, ${computer.*} is not resolvable.
+# In this ccce, ${computer.*} is not resolvable.
 
 # If no args are given, we examine env vars and add to arg list.
 if [[ $# -eq 0 ]]; then

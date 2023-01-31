@@ -30,7 +30,7 @@ pipeline {
 	environment {
 		GIT_URL = 'https://bitbucket.tbank.trrr.tdepartment/scm/rdbo_dops/jenkins-pipelines.git'
 		GIT_CREDS = 'trrr-rdbo-jenkins'
-		NEXUS_CREDS_RDBO_RW = 'trbx-facade-docker'
+		NEXUS_CREDS_RDBO_RW = 'trrx-facade-docker'
 		CI_REGISTRY = "docker-registry.tbank.trrr.tdepartment"
 		DOCKER_IMAGE_NAME = "blackbox_exporter"
 		DOCKERFILE_FOLDER = "blackbox_exporter"

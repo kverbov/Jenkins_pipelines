@@ -13,7 +13,7 @@ scrape_configs:
           names:
             - admc-test
             - audt-test
-            - cash-test
+            - ccch-test
             - crls-test
             - dbzm-test
             - drrr-common
@@ -28,7 +28,7 @@ scrape_configs:
             - online-web-test
             - orid-test
             - pnb-test
-            - rbcn-test
+            - rrcn-test
             - rrrp-atm-test
             - rrrp-chat-test
             - rrrp-cm-test
@@ -41,7 +41,7 @@ scrape_configs:
             - rrrp-rmb-test
             - rrrp-sggo-test
             - savings-bonus-test
-            - scrb-test
+            - scrr-test
             - depart-apis-test
             - depart-core-app-test
             - depart-middle-test
@@ -89,7 +89,7 @@ scrape_configs:
           names:
             - admc-test
             - audt-test
-            - cash-test
+            - ccch-test
             - crls-test
             - dbzm-test
             - drrr-common
@@ -104,7 +104,7 @@ scrape_configs:
             - online-web-test
             - orid-test
             - pnb-test
-            - rbcn-test
+            - rrcn-test
             - rrrp-atm-test
             - rrrp-chat-test
             - rrrp-cm-test
@@ -117,7 +117,7 @@ scrape_configs:
             - rrrp-rmb-test
             - rrrp-sggo-test
             - savings-bonus-test
-            - scrb-test
+            - scrr-test
             - depart-apis-test
             - depart-core-app-test
             - depart-middle-test

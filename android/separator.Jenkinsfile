@@ -25,7 +25,7 @@ pipeline {
    	triggers {
         GenericTrigger(
             genericVariables: [
-                [key: 'rbTrigBy', value: '$.actor.name'],
+                [key: 'rrTrigBy', value: '$.actor.name'],
                 [key: 'emailTrigBy', value: '$.actor.emailAddress'],
                 [key: 'nameTrigBy', value: '$.actor.displayName'],
                 [key: 'toRef', value: '$.pullRequest.toRef.id'],
@@ -33,7 +33,7 @@ pipeline {
                 [key: 'sha', value: '$.pullRequest.fromRef.latestCommit'],
 				[key: 'prDesc', value: '$.pullRequest.title']
             ],
-            causeString: 'Started by WEBHOOK - Create PR by $nameTrigBy, $rbTrigBy ($emailTrigBy)',
+            causeString: 'Started by WEBHOOK - Create PR by $nameTrigBy, $rrTrigBy ($emailTrigBy)',
             token: 'rdbo_android',
             regexpFilterExpression: '',        // добавить, если нужно будет фильтровать срабатывание триггера по значению
             regexpFilterText: '',
@@ -49,7 +49,7 @@ pipeline {
                     parameters: [
                         string(name: "BRANCH", value: fromRef),
                         string(name: "toRef", value: toRef),
-                        string(name: "rbTrigBy", value: rbTrigBy),
+                        string(name: "rrTrigBy", value: rrTrigBy),
                         string(name: "nameTrigBy", value: nameTrigBy),
                         string(name: "PLAINTEXT_COMMENT", value: prDesc),
                         string(name: "sha", value: sha)
@@ -59,7 +59,7 @@ pipeline {
                     print(""" *** MONITORING PARAMETERS ***
     Исходная ветка: ${fromRef}
     Конечная ветка: ${toRef}
-    rb автора: ${rbTrigBy}
+    rr автора: ${rrTrigBy}
     ФИО автора: ${nameTrigBy}
     Описание: ${prDesc}
     Хэш коммита: ${sha}

@@ -32,12 +32,12 @@ pipeline {
 	}
 
 	environment {
-		PROJ = 'rboa'
+		PROJ = 'rroa'
 		NAME = 'android-client'
 		g_DOMAIN = 'domain.department'
 		GIT_URL = "https://bitbucket.${env.g_DOMAIN}/scm/${env.PROJ}/${env.NAME}.git"
 		GIT_CREDS = 'trrr-rdbo-jenkins'
-		CI_REGISTRY_CREDS_ID = "trbx-facade-docker"
+		CI_REGISTRY_CREDS_ID = "trrx-facade-docker"
 	}
 	   	
 	stages {
@@ -57,8 +57,8 @@ pipeline {
 							ignoreUnverifiedSSLPeer: true,
 							includeBuildNumberInKey: true,
 							prependParentProjectKey: false,
-							projectKey: 'RBOA',
-							stashServerBaseUrl: "https://bitbucket.domain.department"
+							projectKey: 'rrOA',
+							stashServerraseUrl: "https://bitbucket.domain.department"
 						)
 					}
 				}
@@ -93,13 +93,13 @@ pipeline {
                                     usernameVariable: 'NEX_PWD')
                     ]) {
 						sh """cat <<EOF > ${NAME}/credentials.properties
-						USER_TRB_LOGIN=${NEX_USR}
-						USER_TRB_PASSWORD=${NEX_PWD}
+						USER_Trr_LOGIN=${NEX_USR}
+						USER_Trr_PASSWORD=${NEX_PWD}
 						EOF"""
 						sh """
 							podman run --rm \
-							-e USER_TRB_LOGIN='${NEX_USR}' \
-							-e USER_TRB_PASSWORD='${NEX_PWD}' \
+							-e USER_Trr_LOGIN='${NEX_USR}' \
+							-e USER_Trr_PASSWORD='${NEX_PWD}' \
 							-e UPLOAD_MAPPING='${UPLOAD_MAPPING}' \
 							-w /tmp/build \
 							-v /jenkins/android-cache:/root/.gradle \
@@ -136,14 +136,14 @@ pipeline {
 						ignoreUnverifiedSSLPeer: true,
 						includeBuildNumberInKey: true,
 						prependParentProjectKey: false,
-						projectKey: 'RBOA',
-						stashServerBaseUrl: "https://bitbucket.domain.department"
+						projectKey: 'rrOA',
+						stashServerraseUrl: "https://bitbucket.domain.department"
 					)
                     env.src = BRANCH.replace("refs/heads/", "")
-					env.rbTrigBy = params.rbTrigBy
+					env.rrTrigBy = params.rrTrigBy
                     env.nameTrigBy = params.nameTrigBy
     				sh '''
-    				    	curl -skXPOST "https://192.168.1.2:443/jenkins/build/android" -H 'Host: api.telegram.org' -d "${BUILDSTATUS}📦Android/${src}\\nWEBHOOK TRIGGER\\nRevision:${TAG}\\nDuration: ${jobDuration} (${jobDurationMs} ms)\\nAuthor: ${rbTrigBy}\\nTriggered by: ${nameTrigBy}\\nDescription: ${PLAINTEXT_COMMENT}\\nAt: $(TZ=MSK-3 date +'%F') $(TZ=MSK-3 date +'%T') UTC+3"
+    				    	curl -skXPOST "https://192.168.1.2:443/jenkins/build/android" -H 'Host: api.telegram.org' -d "${BUILDSTATUS}📦Android/${src}\\nWEBHOOK TRIGGER\\nRevision:${TAG}\\nDuration: ${jobDuration} (${jobDurationMs} ms)\\nAuthor: ${rrTrigBy}\\nTriggered by: ${nameTrigBy}\\nDescription: ${PLAINTEXT_COMMENT}\\nAt: $(TZ=MSK-3 date +'%F') $(TZ=MSK-3 date +'%T') UTC+3"
     					'''
     			}
 				else {

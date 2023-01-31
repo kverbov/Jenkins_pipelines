@@ -27,7 +27,7 @@ pipeline {
 		PROD_DOMAIN = 'bank.rrr.department'
 		NEXUS = "docker-registry.${g_DOMAIN}"
 		IMAGE_IN_NEXUS = "${NEXUS}/rdbo/tools/${SVC_NAME}:${TAG}"
-		NEXUS_CREDS_RDBO_RW = 'trbx-facade-docker'
+		NEXUS_CREDS_RDBO_RW = 'trrx-facade-docker'
 		QUAY = "quay.paas.${PROD_DOMAIN}:5000"
 		IMAGE_IN_QUAY = "${QUAY}/rdbo/tools_${SVC_NAME}:${TAG}"
 		OPENSHIFT_API_URL_DEVTEST = "https://openshift.paas.${TEST_DOMAIN}:8443"

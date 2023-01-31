@@ -13,7 +13,7 @@ scrape_configs:
           names:
             - admc-cert
             - audt-cert
-            - cash-cert
+            - ccch-cert
             - crls-cert
             - dbzm-cert
             - drrr-common
@@ -28,7 +28,7 @@ scrape_configs:
             - online-web-cert
             - orid-cert
             - pnb-cert
-            - rbcn-cert
+            - rrcn-cert
             - rrrp-atm-cert
             - rrrp-chat-cert
             - rrrp-cm-cert
@@ -40,7 +40,7 @@ scrape_configs:
             - rrrp-react-cert
             - rrrp-rmb-cert
             - rrrp-sggo-cert
-            - scrb-cert
+            - scrr-cert
             - svng-cert
             - tcom-cert
             - retail-certprod
@@ -85,7 +85,7 @@ scrape_configs:
           names:
             - admc-cert
             - audt-cert
-            - cash-cert
+            - ccch-cert
             - crls-cert
             - dbzm-cert
             - drrr-common
@@ -100,7 +100,7 @@ scrape_configs:
             - online-web-cert
             - orid-cert
             - pnb-cert
-            - rbcn-cert
+            - rrcn-cert
             - rrrp-atm-cert
             - rrrp-chat-cert
             - rrrp-cm-cert
@@ -112,7 +112,7 @@ scrape_configs:
             - rrrp-react-cert
             - rrrp-rmb-cert
             - rrrp-sggo-cert
-            - scrb-cert
+            - scrr-cert
             - svng-cert
             - tcom-cert
             - retail-certprod

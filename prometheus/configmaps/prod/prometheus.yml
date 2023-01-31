@@ -13,7 +13,7 @@ scrape_configs:
           names:
             - admc-prod
             - audt-prod
-            - cash-prod
+            - ccch-prod
             - crls-prod
             - dbzm-prod
             - drrr-common
@@ -28,7 +28,7 @@ scrape_configs:
             - online-web-prod
             - orid-prod
             - pnb-prod
-            - rbcn-prod
+            - rrcn-prod
             - rrrp-atm-prod
             - rrrp-chat-prod
             - rrrp-cm-prod
@@ -40,7 +40,7 @@ scrape_configs:
             - rrrp-react-prod
             - rrrp-rmb-prod
             - rrrp-sggo-prod
-            - scrb-prod
+            - scrr-prod
             - svng-prod
             - tcom-prod
     relabel_configs:
@@ -84,7 +84,7 @@ scrape_configs:
           names:
             - admc-prod
             - audt-prod
-            - cash-prod
+            - ccch-prod
             - crls-prod
             - dbzm-prod
             - drrr-common
@@ -99,7 +99,7 @@ scrape_configs:
             - online-web-prod
             - orid-prod
             - pnb-prod
-            - rbcn-prod
+            - rrcn-prod
             - rrrp-atm-prod
             - rrrp-chat-prod
             - rrrp-cm-prod
@@ -111,7 +111,7 @@ scrape_configs:
             - rrrp-react-prod
             - rrrp-rmb-prod
             - rrrp-sggo-prod
-            - scrb-prod
+            - scrr-prod
             - svng-prod
             - tcom-prod
     relabel_configs:

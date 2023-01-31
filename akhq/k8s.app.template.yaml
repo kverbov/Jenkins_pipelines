@@ -11,7 +11,7 @@ objects:
         app: '%KAFKA_CLUSTER%'
       namespace: '%NAMESPACE%'
     spec:
-      replicas: 1
+      repliccc: 1
       strategy:
         type: Recreate
       selector:
@@ -39,9 +39,9 @@ objects:
           - env:
             - name: JAVA_OPTS
               value: >-
-                -Djava.security.krb5.conf=/keytab/krb5.conf
-                -Djava.security.krb5.realm=Tbank.Trrr.Tdepartment
-                -Djava.security.krb5.kdc=RSBT-DC192.168.1.2.Tbank.Trrr.Tdepartment
+                -Djava.security.krr5.conf=/keytab/krr5.conf
+                -Djava.security.krr5.realm=Tbank.Trrr.Tdepartment
+                -Djava.security.krr5.kdc=RSBT-DC192.168.1.2.Tbank.Trrr.Tdepartment
                 -Djavax.security.auth.useSubjectCredsOnly=false
             - name: AKHQ_CONFIGURATION
               value: |
@@ -58,8 +58,8 @@ objects:
                   connections:
                     docker-kafka-server:
                       properties:
-                        bootstrap.servers: "RBQATAS00049.test.rrr.department:9092,RBQATAS00050.test.rrr.department:9092,RBQATAS00051.test.rrr.department:9092"
-                        sasl.jaas.config: com.sun.security.auth.module.Krb5LoginModule required serviceName="kafka" useKeyTab=true keyTab="/keytab/trrr_evo_kafka.keytab" principal="trrr_evo_kafka@Tbank.Trrr.Tdepartment";
+                        bootstrap.servers: "rrQATAS00049.test.rrr.department:9092,rrQATAS00050.test.rrr.department:9092,rrQATAS00051.test.rrr.department:9092"
+                        sasl.jaas.config: com.sun.security.auth.module.Krr5LoginModule required serviceName="kafka" useKeyTab=true keyTab="/keytab/trrr_evo_kafka.keytab" principal="trrr_evo_kafka@Tbank.Trrr.Tdepartment";
                         security.protocol: SASL_SSL
                         ssl.trrrtstore.location: "/keytab/client.trrrtstore.jks"
                         ssl.trrrtstore.password: "T1ran1um"
@@ -80,9 +80,9 @@ objects:
               - name: client-trrrtstore-test
                 mountPath: /keytab/client.trrrtstore.jks
                 subPath: client.trrrtstore.jks
-              - name: krb5-file
-                mountPath: /keytab/krb5.conf
-                subPath: krb5.conf
+              - name: krr5-file
+                mountPath: /keytab/krr5.conf
+                subPath: krr5.conf
               - name: ktab-file
                 mountPath: /keytab/trrr_evo_kafka.keytab
                 subPath: trrr_evo_kafka.keytab
@@ -91,9 +91,9 @@ objects:
               configMap:
                 name: client-trrrtstore-test
                 defaultMode: 420
-            - name: krb5-file
+            - name: krr5-file
               configMap:
-                name: krb5-conf
+                name: krr5-conf
                 defaultMode: 420
             - name: ktab-file
               secret:

@@ -21,13 +21,13 @@ if [[ "${STAND}" == @('cert'|'prod') ]]; then
     err_check "${?}" "Failed to mirror image '${IMAGE_IN_NEXUS}:${TAG}' -> '${IMAGE_IN_QUAY}:${TAG}'."
 fi
 
-NAMESPACES="admc-${STAND},audt-${STAND},cash-${STAND},crls-${STAND},dbzm-${STAND},drrr-common,drrr-${STAND},drfs-${STAND},evau-${STAND},evo-${STAND},ips-${STAND},lpet-${STAND},nsdp-${STAND},oapi-gord-${STAND},online-web-${STAND},orid-${STAND},pnb-${STAND},rbcn-${STAND},rrrp-atm-${STAND},rrrp-chat-${STAND},rrrp-corp-${STAND},rrrp-nfo-${STAND},rrrp-payr-${STAND},rrrp-react-${STAND},scrb-${STAND},svng-${STAND},tcom-${STAND}"
+NAMESPACES="admc-${STAND},audt-${STAND},ccch-${STAND},crls-${STAND},dbzm-${STAND},drrr-common,drrr-${STAND},drfs-${STAND},evau-${STAND},evo-${STAND},ips-${STAND},lpet-${STAND},nsdp-${STAND},oapi-gord-${STAND},online-web-${STAND},orid-${STAND},pnb-${STAND},rrcn-${STAND},rrrp-atm-${STAND},rrrp-chat-${STAND},rrrp-corp-${STAND},rrrp-nfo-${STAND},rrrp-payr-${STAND},rrrp-react-${STAND},scrr-${STAND},svng-${STAND},tcom-${STAND}"
 if [[ "${STAND}" == 'test' ]]; then
     NAMESPACES+=",drrr-common,retail-devtest"
 elif [[ "${STAND}" == 'prod' ]]; then
     NAMESPACES+=",drrr-common,retail-certprod"
 elif [[ "${STAND}" == 'dr' ]]; then
-    NAMESPACES="admc-prod,dbzm-prod,drrr-prod,drfs-prod,evo-prod,ips-prod,nsdp-prod,orid-prod,scrb-prod,tcom-prod,drrr-common,retail-certprod"
+    NAMESPACES="admc-prod,dbzm-prod,drrr-prod,drfs-prod,evo-prod,ips-prod,nsdp-prod,orid-prod,scrr-prod,tcom-prod,drrr-common,retail-certprod"
 fi
 
 oc login "${OPENSHIFT_API_URL}" -u="${OPENSHIFT_USERNAME}@${DOMAIN}" -p="${OPENSHIFT_PASSWORD}" --insecure-skip-tls-verify=true

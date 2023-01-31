@@ -17,7 +17,7 @@ pipeline {
 		)
 		choice(
 			name: 'KAFKA_CLUSTER',
-			choices: ['akhq-rbkafka', 'akhq-retail'],
+			choices: ['akhq-rrkafka', 'akhq-retail'],
 			description: 'Specify which kafka cluster is used for this GUI'
 		)
 		choice(

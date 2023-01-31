@@ -29,7 +29,7 @@ pipeline {
 		GIT_URL = 'https://bitbucket.domain.department/scm/rdbo_dops/jenkins-pipelines.git'
 		CI_REGISTRY = 'docker-registry.domain.department/rdbo/common'
 		CI_REGISTRY_IMAGE = "${env.CI_REGISTRY}/${env.SVC_NAME}"
-		NEXUS_CREDS_RDBO_RW = 'trbx-facade-docker'
+		NEXUS_CREDS_RDBO_RW = 'trrx-facade-docker'
 		GIT_CREDS = 'trrr-rdbo-jenkins'
 	}
 

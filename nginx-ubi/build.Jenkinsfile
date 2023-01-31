@@ -31,7 +31,7 @@ pipeline {
 		PROD_DOMAIN = 'bank.rrr.department'
 		NEXUS = "docker-registry.${g_DOMAIN}"
 		IMAGE_IN_NEXUS = "${NEXUS}/rdbo/common/${SVC_NAME}:${TAG}"
-		NEXUS_CREDS_RDBO_RW = 'trbx-facade-docker'
+		NEXUS_CREDS_RDBO_RW = 'trrx-facade-docker'
 		GIT_URL = "https://bitbucket.${g_DOMAIN}/scm/rdbo_dops/jenkins-pipelines.git"
 		GIT_CREDS = 'trrr-rdbo-jenkins'
 	}

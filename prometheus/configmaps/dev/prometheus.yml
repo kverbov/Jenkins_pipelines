@@ -18,7 +18,7 @@ scrape_configs:
             - ips-dev
             - nsdp-dev
             - orid-dev
-            - scrb-dev
+            - scrr-dev
             - tcom-dev
             - saving-bonus-dev
             - partner-engine-dev
@@ -70,7 +70,7 @@ scrape_configs:
             - ips-dev
             - nsdp-dev
             - orid-dev
-            - scrb-dev
+            - scrr-dev
             - tcom-dev
             - saving-bonus-dev
             - partner-engine-dev

@@ -21,7 +21,7 @@ properties([
             defaultValue: '',
             required: true
         ),
-        [$class: 'CascadeChoiceParameter',
+        [$class: 'ccccadeChoiceParameter',
             choiceType: 'PT_SINGLE_SELECT',
             filterLength: 1,
             filterable: false,
