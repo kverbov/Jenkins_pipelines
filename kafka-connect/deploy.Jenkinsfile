@@ -18,7 +18,7 @@ pipeline {
 	parameters {
 		 choice(
 			name: 'PROJECT',
-			choices: ['dbzm', 'glae', 'sgia', 'bis', 'artbank'],
+			choices: ['dbzm', 'glae', 'depart', 'bis', 'artbank'],
 			description: "select project aka openshift namespace"
 		)
 		choice(
